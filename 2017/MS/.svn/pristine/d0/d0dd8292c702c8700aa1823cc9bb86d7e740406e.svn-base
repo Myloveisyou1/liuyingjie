@@ -1,0 +1,219 @@
+package com.manji.messageserver.aop;
+
+import com.manji.messageserver.common.enums.StatusEnum;
+import com.manji.messageserver.common.errorcode.ErrorCodeEnum;
+import com.manji.messageserver.common.exception.AssertException;
+import com.manji.messageserver.common.exception.ServiceException;
+import com.manji.messageserver.common.utils.CollectionsUtils;
+import com.manji.messageserver.dao.entity.UserDO;
+import com.manji.messageserver.dao.repository.UserDAO;
+import com.manji.messageserver.requestParam.BaseRequestParam;
+import com.manji.messageserver.requestParam.RegisterRequestParam;
+import com.manji.messageserver.requestParam.modifyUserNicknameRequestParam;
+import com.manji.messageserver.requestParam.modifyUserPasswordRequestParam;
+import com.manji.messageserver.responseResult.BaseResult;
+import com.manji.messageserver.responseResult.StandardResultInfo;
+import com.manji.messageserver.utils.DateUtil;
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.Signature;
+import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.reflect.MethodSignature;
+import org.hibernate.exception.ConstraintViolationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
+
+import javax.validation.ConstraintViolation;
+import java.util.Date;
+import java.util.Set;
+
+/**
+ * Created by pudding on 2016-12-12.
+ */
+@Aspect
+@Component
+public class WebServiceAspect {
+
+    @Autowired
+    private UserDAO userDAO;
+
+    private static final Logger logger = LoggerFactory.getLogger(WebServiceAspect.class);
+
+    @Around("execution(* com.manji.messageserver.service.*.*(..))")
+    public Object handleException(ProceedingJoinPoint pjp) throws Throwable {
+        boolean isStandardWebServiceMethod = false;
+        Object[] args = pjp.getArgs();
+        Signature signature = pjp.getSignature();
+        Class returnType = ((MethodSignature) signature).getReturnType();
+        if (args != null && args.length > 0 && args[0] instanceof BaseRequestParam && BaseResult.class.isAssignableFrom(returnType)) {
+            isStandardWebServiceMethod = true;
+        }
+
+        if (isStandardWebServiceMethod) {
+            BaseRequestParam param = (BaseRequestParam) args[0];
+            logger.info("WebService入参：param={}", param);
+
+            Set<ConstraintViolation<BaseRequestParam>> click = param.click();
+            if (!CollectionsUtils.isEmptyCollection(click)) {
+                for (ConstraintViolation<BaseRequestParam> violations : click) {
+                    return BaseResult.getFailResult(ErrorCodeEnum.PARAM_VALIDATION_FAIL.getCode(), ErrorCodeEnum.PARAM_VALIDATION_FAIL.getMessage(), violations.getPropertyPath() + "|" + violations.getMessage());
+                }
+            }
+            Object origResult = null;
+
+            try {
+                origResult = pjp.proceed(args);
+            } catch (AssertException e) {
+                logger.info("校验失败：", e);
+                handleExceptionInTransaction();
+                return BaseResult.getFailResult(e.getErrorCode(), e.getErrorMessage());
+            } catch (IllegalArgumentException e) {
+                logger.info("参数错误：", e);
+                handleExceptionInTransaction();
+                ErrorCodeEnum errorCode = ErrorCodeEnum.getByCode(e.getMessage());
+                BaseResult result = new BaseResult();
+                if (errorCode != null) {
+                    result.setFailResult(errorCode.getCode(), errorCode.getMessage());
+                } else {
+                    result.setFailResult(ErrorCodeEnum.INVALID_ARGUMENTS.getCode(),
+                            e.getMessage());
+                }
+                return result;
+            } catch (ServiceException e) {
+                logger.info("web服务异常：", e);
+                handleExceptionInTransaction();
+                return BaseResult.getFailResult(e.getResultCode(), e.getResultMessage());
+
+            } catch (DataIntegrityViolationException e) {
+                handleExceptionInTransaction();
+                BaseResult result = new BaseResult();
+                if (e.getCause() instanceof ConstraintViolationException) {
+                    logger.info("数据重复：", e);
+                    result.setFailResult(ErrorCodeEnum.DATA_DUPLICATE.getCode(), "数据重复");
+                } else {
+                    logger.info("数据库异常：", e);
+                    result.setFailResult(ErrorCodeEnum.DB_ERROR.getCode(), "数据库异常");
+                }
+                return result;
+            } catch (DataAccessException e) {
+                handleExceptionInTransaction();
+                logger.info("数据库访问错误：", e);
+                return BaseResult.getFailResult(ErrorCodeEnum.DB_ERROR.getCode(), "数据库访问错误");
+            } catch (Exception e) {
+                logger.error("未知异常：", e);
+                handleExceptionInTransaction();
+                return BaseResult.getFailResult(ErrorCodeEnum.UNKNOWN_ERROR.getCode(), ErrorCodeEnum.UNKNOWN_ERROR.getMessage());
+            }
+            return origResult;
+        } else {
+            return pjp.proceed(args);
+        }
+    }
+
+
+    /**
+     * 单个注册的数据保存后置处理
+     * @param joinPoint
+     * @param returnValue
+     */
+    @AfterReturning(pointcut="execution(* com.manji.messageserver.service.UserService.registerIM(..)))", returning="returnValue")
+    public void handelUserRegisterDataSave(JoinPoint joinPoint, Object returnValue) {
+        Object[] args = joinPoint.getArgs();
+        if (args != null && args[0] != null) {
+            RegisterRequestParam requestParam = (RegisterRequestParam) args[0];
+            StandardResultInfo resultInfo= (StandardResultInfo) returnValue;
+            if(resultInfo.getStatusEnum().equals(StatusEnum.SUCCESS)){
+                UserDO userDO=new UserDO();
+                userDO.setActivated("true");
+                userDO.setCreateTime(DateUtil.getFormatDate(DateUtil.getFormatStr(new Date())));
+                userDO.setStatus("0");
+                userDO.setUserName(requestParam.getUserName());
+                userDO.setUserPassword(requestParam.getPassword());
+                userDAO.save(userDO);
+                logger.info("用户数据入库成功 user={}",userDO);
+            }else{
+                logger.warn("环信请求失败-不做数据保存 result={}",resultInfo);
+            }
+        }
+
+    }
+
+
+    /**
+     * 用户昵称修改保存
+     * @param joinPoint
+     * @param returnValue
+     */
+    @AfterReturning(pointcut="execution(* com.manji.messageserver.service.UserService.modifyUserNickname(..)))", returning="returnValue")
+    public void handelUserNickNameDataSave(JoinPoint joinPoint, Object returnValue){
+        Object[] args = joinPoint.getArgs();
+        if (args != null && args[0] != null) {
+            modifyUserNicknameRequestParam requestParam= (modifyUserNicknameRequestParam) args[0];
+            StandardResultInfo resultInfo= (StandardResultInfo) returnValue;
+            if(resultInfo.getStatusEnum().equals(StatusEnum.SUCCESS)){
+                UserDO user = userDAO.findByUserName(requestParam.getUserName());
+                if(user!=null){
+                    user.setModifyTime(DateUtil.getFormatDate(DateUtil.getFormatStr(new Date())));
+                    user.setNickname(requestParam.getNickname());
+                    userDAO.save(user);
+                }else{
+                    logger.warn("用户为空不做任何处理 requestParam={}",requestParam);
+                }
+            }else{
+                logger.warn("环信请求失败-不做数据保存 result={}",resultInfo);
+            }
+
+        }
+    }
+
+
+    /**
+     * 用户密码修改数据同步
+     * @param joinPoint
+     * @param returnValue
+     */
+    @AfterReturning(pointcut="execution(* com.manji.messageserver.service.UserService.modifyUserPassword(..)))", returning="returnValue")
+    public void handelUserPasswordDateSave(JoinPoint joinPoint, Object returnValue){
+        Object[] args = joinPoint.getArgs();
+        if (args != null && args[0] != null) {
+            modifyUserPasswordRequestParam requestParam= (modifyUserPasswordRequestParam) args[0];
+            StandardResultInfo resultInfo= (StandardResultInfo) returnValue;
+            if(resultInfo.getStatusEnum().equals(StatusEnum.SUCCESS)){
+                UserDO user = userDAO.findByUserName(requestParam.getUserName());
+                if(user!=null){
+                    user.setModifyTime(DateUtil.getFormatDate(DateUtil.getFormatStr(new Date())));
+                    user.setUserPassword(requestParam.getNewPassword());
+                    userDAO.save(user);
+                }else{
+                    logger.warn("用户为空不做任何处理 requestParam={}",requestParam);
+                }
+            }else{
+                logger.warn("环信请求失败-不做数据保存 result={}",resultInfo);
+            }
+        }
+
+
+    }
+
+
+
+
+    
+
+
+    private void handleExceptionInTransaction() {
+        try {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+        } catch (Exception e) {
+            //	忽略事务不存在的异常
+        }
+    }
+}

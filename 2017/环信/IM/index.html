@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>IM即时通讯</title>
+    <!--webim相关配置-->
+    <script type="text/javascript" src="js/webim.config.js"></script>
+    <!--sdk相关的js-->
+    <script type='text/javascript' src='js/strophe-1.2.8.min.js'></script>
+    <script type="text/javascript" src="js/demo-1.4.5.js"></script>
+    <script type="text/javascript" src="js/websdk-1.4.5.js"></script>
+    <!-- Jquery相关的js -->
+    <script type="text/javascript" src="js/jquery-1.11.2.min.js"></script>
+    <!--页面方法JS-->
+    <script type="text/javascript" src="js/main.js"></script>
+
+    <!--CSS-->
+    <link rel="stylesheet" type="text/css" href="css/login.css">
+    <link rel="stylesheet" type="text/css" href="css/file.css">
+    <link rel="stylesheet" type="text/css" href="css/emoji.css">
+    <link rel="stylesheet" type="text/css" href="css/friends.css">
+    <link rel="stylesheet" type="text/css" href="css/chatwindow.css">
+    <link href="css/tabStyle.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+    <!--登录，注册界面-->
+    <!-- 登录 -->
+    <div id="mylogin" align="center">
+        用户名:<input type="text" id="userName"><br><br>
+        密    &nbsp;&nbsp;码:<input type="password" id="userPassword"><br><br>
+        <input type="button" id="login" value="登录" onclick="login()">
+        <p>还没有账号，点击<span class="mySpan"  onclick="showRegister()">这里</span>注册</p>
+    </div>
+    <!-- 注册 -->
+    <div id="myRegister" align="center">
+        用户名:<input type="text" id="username"><br><br>
+        密    &nbsp;&nbsp;码:<input type="password" id="userpassword"><br>
+        昵    &nbsp;&nbsp;称:<input type="text" id="nickName"><br>
+        <input type="button" id="regester" value="注册" onclick="register()">
+        <p>已账号，点击<span class="mySpan"  onclick="showLogin()">这里</span>登录</p>
+    </div>
+    <!--表情展示-->
+    <div id="imgdiv">
+        <p>
+            <img src="images/faces/微笑.png" onclick="getstr('[):]')" class="myEmoji"/>
+            <img src="images/faces/憨笑.png" onclick="getstr('[:D]')" class="myEmoji"/>
+            <img src="images/faces/疑问.png" onclick="getstr('[;)]')" class="myEmoji"/>
+            <img src="images/faces/衰.png" onclick="getstr('[:-o]')" class="myEmoji"/>
+            <img src="images/faces/调皮.png" onclick="getstr('[:p]')" class="myEmoji"/>
+            <img src="images/faces/得意.png" onclick="getstr('[(H)]')" class="myEmoji"/>
+            <img src="images/faces/发怒.png" onclick="getstr('[:@]')" class="myEmoji"/>
+        </p>
+        <p>
+            <img src="images/faces/撇嘴.png" onclick="getstr('[:s]')" class="myEmoji"/>
+            <img src="images/faces/委屈.png" onclick="getstr('[:$]')" class="myEmoji"/>
+            <img src="images/faces/傲慢.png" onclick="getstr('[:(]')" class="myEmoji"/>
+            <img src="images/faces/大哭.png" onclick="getstr('[:\'(]')" class="myEmoji"/>
+            <img src="images/faces/尴尬.png" onclick="getstr('[:|]')" class="myEmoji"/>
+            <img src="images/faces/抠鼻.png" onclick="getstr('[(a)]')" class="myEmoji"/>
+            <img src="images/faces/坏笑.png" onclick="getstr('[8o|]')" class="myEmoji"/>
+        </p>
+        <p>
+            <img src="images/faces/阴险.png" onclick="getstr('[8-|]')" class="myEmoji"/>
+            <img src="images/faces/吐.png" onclick="getstr('[+o(]')" class="myEmoji"/>
+            <img src="images/faces/睡觉.png" onclick="getstr('[<o)]')" class="myEmoji"/>
+            <img src="images/faces/龇牙.png" onclick="getstr('[|-)]')" class="myEmoji"/>
+            <img src="images/faces/吓.png" onclick="getstr('[*-)]')" class="myEmoji"/>
+            <img src="images/faces/闭嘴.png" onclick="getstr('[:-#]')" class="myEmoji"/>
+            <img src="images/faces/偷笑.png" onclick="getstr('[:-*]')" class="myEmoji"/>
+        </p>
+        <p>
+            <img src="images/faces/咒骂.png" onclick="getstr('[^o)]')" class="myEmoji"/>
+            <img src="images/faces/抓狂.png" onclick="getstr('[8-)]')" class="myEmoji"/>
+            <img src="images/faces/爱心.png" onclick="getstr('[(|)]')" class="myEmoji"/>
+            <img src="images/faces/心碎.png" onclick="getstr('[(u)]')" class="myEmoji"/>
+            <img src="images/faces/蛋糕.png" onclick="getstr('[(S)]')" class="myEmoji"/>
+            <img src="images/faces/月亮.png" onclick="getstr('[(*)]')" class="myEmoji"/>
+            <img src="images/faces/阳光.png" onclick="getstr('[(#)]')" class="myEmoji"/>
+        </p>
+        <p>
+            <img src="images/faces/晕.png" onclick="getstr('[(R)]')" class="myEmoji"/>
+            <img src="images/faces/色.png" onclick="getstr('[({)]')" class="myEmoji"/>
+            <img src="images/faces/亲亲.png" onclick="getstr('[(})]')" class="myEmoji"/>
+            <img src="images/faces/示爱.png" onclick="getstr('[(k)]')" class="myEmoji"/>
+            <img src="images/faces/心动.png" onclick="getstr('[(F)]')" class="myEmoji"/>
+            <img src="images/faces/凋谢.png" onclick="getstr('[(W)]')" class="myEmoji"/>
+            <img src="images/faces/强.png" onclick="getstr('[(D)]')" class="myEmoji"/>
+        </p>
+    </div>
+    <!--好友和聊天界面-->
+    <input type="hidden" id="hideClass">
+    <input type="hidden" id="hideFriends">
+    <div style="width: 100%;height: 100%;"id="main">
+        <!--好友-->
+        <div class="friends">
+            <table>
+                <tbody id="myfriends"></tbody>
+            </table>
+        </div>
+        <!--聊天界面 -->
+        <div class="chatwindow">
+            <!--接收人 -->
+            <!--<div class="fromDiv"><p id="from" align="center"></p></div>-->
+            <div class="fromDiv">
+                <ul class="tabs">
+
+                </ul>
+            </div>
+
+            <!--消息记录 -->
+            <div id="content">
+            </div>
+            <!--表情，图片，文件 -->
+            <div class="epf">
+                <div class="file">
+                    <img  onclick="imgEvent()" src="images/表情.png">
+                </div>
+                <div class="file"><img  onclick="imgEvent()" src="images/图片.png">
+                    <input type="file" id="pic" onchange="upLoad()">
+                </div>
+                <div class="file"><img  onclick="imgEvent()" src="images/文件.png">
+                    <input type="file" id="myFile" onchange="upLoad2()">
+                </div>
+            </div>
+            <!--输入框 -->
+            <div class="inputMessage">
+                <textarea onclick="hideEmoji()" id="message"></textarea>
+            </div>
+            <!--发送按钮-->
+            <div class="sendMessage">
+                 <div class="sendMessage2">
+                    <input class="btn" type="button" value="发送" onclick="sendMessage()" onmouseover="hideEmoji()"/>
+                 </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

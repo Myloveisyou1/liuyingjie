@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<data>
+	<benefit>
+		<list>
+			<category>
+				<id>837</id>
+				<title>食品茶酒</title>
+			<goods>
+				<categoryid></categoryid>
+				<goodid></goodid>
+			</goods>
+			</category>
+			<category>
+				<id>910</id>
+				<title>宠物用物</title>
+			<goods>
+				<categoryid></categoryid>
+				<goodid></goodid>
+			</goods>
+			</category>
+			<category>
+				<id>798</id>
+				<title>服饰箱包</title>
+			<goods>
+				<categoryid></categoryid>
+				<goodid></goodid>
+			</goods>
+			</category>
+		</list>
+	</benefit>
+	
+	<help>
+	</help>
+
+</data>

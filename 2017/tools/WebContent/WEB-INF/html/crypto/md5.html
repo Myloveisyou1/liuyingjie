@@ -1,0 +1,76 @@
+#@layout() 
+#define main()
+<div class="row wrapper border-bottom white-bg page-heading">
+             <div class="col-lg-10">
+                 <ol class="breadcrumb">
+                     <li>
+                         <a href="#">主页</a>
+                     </li>
+                     <li>
+                         <a>加密相关</a>
+                     </li>
+                     <li>
+                         <a>MD5加密</a>
+                     </li>
+                 </ol>
+             </div>
+             <div class="col-lg-2">
+
+             </div>
+         </div>
+         <div class="wrapper wrapper-content animated fadeInRight">
+             <div class="row">
+                 <div class="col-lg-12">
+                     <div class="ibox float-e-margins">
+                         <div class="ibox-title">
+                         	<label style="font-size:20px;color: blue;">需要加密的字符串：</label>
+                         	<label style="font-size:20px;">
+                         		<input type="text" id="code" style="width: 500px;font-size: 16px;"></label>
+                         	<label style="font-size:20px;float: right;">
+                             	<a class="btn btn-sm btn-primary" onclick="getDays()">加密</a>
+                             </label>
+                         </div>
+                         <div class="ibox-title">
+                         	<label style="font-size:20px;color: blue;">操作结果：</label>
+                         	<div class="ibox-content" id="result">
+                         		
+                         	</div>
+                         </div>
+                         <div class="ibox-title">
+                         	<label style="font-size:20px;color: blue;">关键代码截图：<a style="font-size: 10px;" onclick="showImg()" id="aa">显示</a></label>
+                         </div>
+                         <div class="ibox-title">
+                         	<label id="imgs"></label>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+         </div>
+      
+    <script type="text/javascript" src="#(ctx)/static/js/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="#(ctx)/static/laydate/laydate.js"></script>
+    <script>
+    	
+	    /*获取日期之间的天数**/
+	    function getDays(){
+	    	$.ajax({
+		    	type:"get",
+		    	url:"/tools/crypto/md5",
+		    	dataType:"json",
+		    	data:{
+		    		code:$("#code").val()
+		    	},success:function(data){
+		    		console.log(data);
+		    		var d = data.result.split(";");
+		    		$("#result").html("16位小写："+d[0]+"<br />16位大写："+d[1]+"<br />32位小写："+d[2]+"<br />32位大写："+d[3]+"<br />");
+		    		type = data.type;
+		    	}
+		    });
+	    }
+	    /*显示代码截图**/
+	    function showImg(){
+	    	$("#imgs").html("<img src='#(ctx)/static/images/"+type+".png' style='width:auto;height:auto;'>");
+	    }
+    </script>
+
+#end
