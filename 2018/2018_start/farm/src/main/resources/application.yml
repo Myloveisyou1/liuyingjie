@@ -1,7 +1,9 @@
+#端口号相关配置
 server:
   port: 8081
   tomcat:
     uri-encoding: UTF-8
+#eureka配置
 eureka:
   client:
     serviceUrl:
@@ -17,3 +19,10 @@ spring:
 ribbon:
   ReadTimeout: 60000
   ConnectTimeout: 60000
+#配置mysql数据源
+mysql:
+  datasource:
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/farm?useUnicode=true&characterEncoding=utf8
+    username: root
+    password: root
