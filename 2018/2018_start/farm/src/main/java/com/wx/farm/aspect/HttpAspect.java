@@ -10,6 +10,8 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @Aspect
 @Component
@@ -17,7 +19,7 @@ public class HttpAspect {
 
     private final static Logger log = LoggerFactory.getLogger(HttpAspect.class);
 
-    @Pointcut("execution(public * com.wx.farm.controller.HelloController.*(..))")
+    @Pointcut("execution(public * com.wx.farm.controller.*.*(..))")
     public void log(){
 
     }
@@ -26,6 +28,8 @@ public class HttpAspect {
     public void doBefore(JoinPoint joinPoint){
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
+        log.info("===========开始请求"+joinPoint.getSignature().getDeclaringTypeName()+"."+joinPoint.getSignature().getName()+"============");
+        log.info("===========请求时间:"+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())+"==========================");
         //获取url
         log.info("url={}",request.getRequestURL());
 
@@ -43,7 +47,7 @@ public class HttpAspect {
     }
     @After("log()")
     public void doAfter(){
-        System.out.println("2222222222222");
+        log.info("=============结束请求时间:"+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())+"======================");
     }
     /**
      * 获取返回的结果集

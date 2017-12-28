@@ -24,7 +24,7 @@ public class ExceptionHandle {
 
         if(e instanceof FarmException){
             FarmException farmException = (FarmException) e;
-            return ResultUtil.error(((FarmException) e).getCode(),e.getMessage());
+            return ResultUtil.error(farmException.getCode(),farmException.getMessage());
         }else{
             logger.info("系统异常{}",e);
             return ResultUtil.error(-1,"系统繁忙,请稍后再试!");
