@@ -27,7 +27,7 @@ public class ExceptionHandle {
             return ResultUtil.error(((FarmException) e).getCode(),e.getMessage());
         }else{
             logger.info("系统异常{}",e);
-            return ResultUtil.error(-1,"系统繁忙");
+            return ResultUtil.error(-1,"系统繁忙,请稍后再试!");
         }
     }
 }
