@@ -1,0 +1,216 @@
+/*
+Navicat MySQL Data Transfer
+
+Source Server         : 本地
+Source Server Version : 50717
+Source Host           : localhost:3306
+Source Database       : farm
+
+Target Server Type    : MYSQL
+Target Server Version : 50717
+File Encoding         : 65001
+
+Date: 2018-01-05 15:21:45
+*/
+
+SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for f_consume
+-- ----------------------------
+DROP TABLE IF EXISTS `f_consume`;
+CREATE TABLE `f_consume` (
+  `fid` int(11) NOT NULL AUTO_INCREMENT,
+  `f_consume_type` int(2) DEFAULT NULL COMMENT '类型 1早餐 2午餐 3晚餐 4小吃 5生活 6通讯 7交通',
+  `f_consume_money` decimal(4,2) DEFAULT NULL COMMENT '金额',
+  `f_consume_remark` varchar(255) DEFAULT NULL COMMENT '备注',
+  `f_consume_time` datetime DEFAULT NULL COMMENT '消费时间',
+  PRIMARY KEY (`fid`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COMMENT='消费信息表';
+
+-- ----------------------------
+-- Records of f_consume
+-- ----------------------------
+INSERT INTO `f_consume` VALUES ('1', '1', '5.00', '早饭', '2018-01-02 08:30:32');
+INSERT INTO `f_consume` VALUES ('2', '7', '18.80', '车费', '2018-01-02 10:11:29');
+INSERT INTO `f_consume` VALUES ('3', '4', '17.00', '超市', '2018-01-02 19:04:29');
+INSERT INTO `f_consume` VALUES ('4', '5', '1.00', '纸巾', '2018-01-03 09:06:02');
+INSERT INTO `f_consume` VALUES ('5', '7', '3.60', '轻轨+公交车', '2018-01-03 10:09:01');
+INSERT INTO `f_consume` VALUES ('6', '2', '10.00', '午饭', '2018-01-03 12:04:56');
+INSERT INTO `f_consume` VALUES ('7', '2', '12.00', '午饭', '2018-01-04 12:05:35');
+INSERT INTO `f_consume` VALUES ('8', '4', '1.00', '棒棒糖', '2018-01-04 10:08:15');
+INSERT INTO `f_consume` VALUES ('9', '4', '1.00', '哇哈哈', '2018-01-05 10:09:43');
+INSERT INTO `f_consume` VALUES ('10', '2', '12.00', '午饭', '2018-01-05 14:05:53');
+
+-- ----------------------------
+-- Table structure for f_consume_detail
+-- ----------------------------
+DROP TABLE IF EXISTS `f_consume_detail`;
+CREATE TABLE `f_consume_detail` (
+  `fid` int(11) NOT NULL AUTO_INCREMENT,
+  `f_consume_id` int(11) DEFAULT NULL COMMENT '消费主表id',
+  `f_name` varchar(255) DEFAULT NULL COMMENT '消费物品名称',
+  `f_price` decimal(10,2) DEFAULT NULL COMMENT '价格',
+  `f_ctime` datetime DEFAULT NULL,
+  PRIMARY KEY (`fid`)
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8 COMMENT='消费信息详情表';
+
+-- ----------------------------
+-- Records of f_consume_detail
+-- ----------------------------
+INSERT INTO `f_consume_detail` VALUES ('1', '1', '棒棒糖', '1.00', '2018-01-02 10:10:42');
+INSERT INTO `f_consume_detail` VALUES ('2', '1', '八宝粥', '4.00', '2018-01-02 10:10:52');
+INSERT INTO `f_consume_detail` VALUES ('3', '2', '轻轨', '3.60', '2018-01-02 10:11:44');
+INSERT INTO `f_consume_detail` VALUES ('4', '2', '滴滴打车', '15.20', '2018-01-02 10:12:06');
+INSERT INTO `f_consume_detail` VALUES ('5', '3', '泡面', '12.50', '2018-01-02 19:06:51');
+INSERT INTO `f_consume_detail` VALUES ('6', '3', '辣条', '4.50', '2018-01-02 19:06:51');
+INSERT INTO `f_consume_detail` VALUES ('7', '4', '纸巾', '1.00', '2018-01-03 09:07:45');
+INSERT INTO `f_consume_detail` VALUES ('8', '5', '车费', '3.60', '2018-01-03 10:09:18');
+INSERT INTO `f_consume_detail` VALUES ('9', '6', '午饭', '10.00', '2018-01-03 12:05:21');
+INSERT INTO `f_consume_detail` VALUES ('10', '7', '午饭', '12.00', '2018-01-04 12:05:49');
+INSERT INTO `f_consume_detail` VALUES ('11', '8', '棒棒糖', '1.00', '2018-01-04 10:10:58');
+INSERT INTO `f_consume_detail` VALUES ('12', '9', '哇哈哈', '1.00', '2018-01-05 10:11:14');
+INSERT INTO `f_consume_detail` VALUES ('13', '10', '午饭', '12.00', '2018-01-05 14:06:09');
+
+-- ----------------------------
+-- Table structure for f_goods
+-- ----------------------------
+DROP TABLE IF EXISTS `f_goods`;
+CREATE TABLE `f_goods` (
+  `fid` int(11) NOT NULL AUTO_INCREMENT,
+  `f_goods_no` varchar(50) DEFAULT NULL COMMENT '商品编号',
+  `f_goods_name` varchar(100) DEFAULT NULL COMMENT '商品名称',
+  `f_goods_price` decimal(10,2) DEFAULT NULL COMMENT '商品价格',
+  `f_goods_pics` varchar(255) DEFAULT NULL COMMENT '商品图片',
+  `f_goods_remark` varchar(255) DEFAULT NULL COMMENT '商品备注',
+  `f_goods_status` int(2) DEFAULT NULL COMMENT '商品状态',
+  `f_goods_ctime` datetime DEFAULT NULL COMMENT '创建时间',
+  `f_version` int(1) DEFAULT NULL COMMENT '版本',
+  PRIMARY KEY (`fid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品信息表';
+
+-- ----------------------------
+-- Records of f_goods
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for f_order
+-- ----------------------------
+DROP TABLE IF EXISTS `f_order`;
+CREATE TABLE `f_order` (
+  `fid` int(11) NOT NULL AUTO_INCREMENT,
+  `f_order_no` varchar(50) DEFAULT NULL COMMENT '订单编号',
+  `f_order_type` int(1) DEFAULT NULL COMMENT '订单类型',
+  `f_order_goods` varchar(50) DEFAULT NULL COMMENT '订单商品',
+  `f_order_goods_name` varchar(255) DEFAULT NULL COMMENT '订单商品名称',
+  `f_order_money` decimal(11,2) DEFAULT NULL COMMENT '订单金额',
+  `f_order_user` varchar(50) DEFAULT NULL COMMENT '收货人',
+  `f_order_tel` varchar(11) DEFAULT NULL COMMENT '联系电话',
+  `f_order_address` varchar(255) DEFAULT NULL COMMENT '收货地址',
+  `f_order_remark` varchar(255) DEFAULT NULL COMMENT '订单备注',
+  `f_order_status` int(2) DEFAULT NULL COMMENT '订单状态',
+  `f_order_ctime` datetime DEFAULT NULL COMMENT '订单创建时间',
+  `f_version` int(2) DEFAULT NULL COMMENT '版本',
+  PRIMARY KEY (`fid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单信息表';
+
+-- ----------------------------
+-- Records of f_order
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for f_sys_exception
+-- ----------------------------
+DROP TABLE IF EXISTS `f_sys_exception`;
+CREATE TABLE `f_sys_exception` (
+  `fid` int(11) NOT NULL,
+  `f_exception_no` varchar(50) DEFAULT NULL COMMENT '异常编号',
+  `f_exception_name` varchar(50) DEFAULT NULL COMMENT '异常名称',
+  `f_exception_method` varchar(50) DEFAULT NULL COMMENT '异常发生方法',
+  `f_exception_ctime` datetime DEFAULT NULL COMMENT '异常产生时间',
+  PRIMARY KEY (`fid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='异常信息记录表';
+
+-- ----------------------------
+-- Records of f_sys_exception
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for f_sys_http
+-- ----------------------------
+DROP TABLE IF EXISTS `f_sys_http`;
+CREATE TABLE `f_sys_http` (
+  `fid` int(11) NOT NULL,
+  `f_http_url` varchar(255) DEFAULT NULL COMMENT '请求地址',
+  `f_http_ip` varchar(255) DEFAULT NULL COMMENT '请求ip',
+  `f_http_method` varchar(50) DEFAULT NULL COMMENT '请求方式',
+  `f_http_class_method` varchar(50) DEFAULT NULL COMMENT '请求方法',
+  `f_http_args` varchar(255) DEFAULT NULL COMMENT '请求参数',
+  `f_http_ctime` datetime DEFAULT NULL COMMENT '请求时间',
+  PRIMARY KEY (`fid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='请求信息表';
+
+-- ----------------------------
+-- Records of f_sys_http
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for f_sys_log
+-- ----------------------------
+DROP TABLE IF EXISTS `f_sys_log`;
+CREATE TABLE `f_sys_log` (
+  `fid` int(11) NOT NULL,
+  `f_log_no` varchar(50) DEFAULT NULL COMMENT '日志编号',
+  `f_log_method` varchar(50) DEFAULT NULL COMMENT '调用方法',
+  `f_log_content` varchar(255) DEFAULT NULL COMMENT '日志内容',
+  `f_log_type` varchar(10) DEFAULT NULL COMMENT '日志类型',
+  `f_log_ctime` datetime DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`fid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统日志记录表';
+
+-- ----------------------------
+-- Records of f_sys_log
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for f_time_axis
+-- ----------------------------
+DROP TABLE IF EXISTS `f_time_axis`;
+CREATE TABLE `f_time_axis` (
+  `fid` int(11) NOT NULL AUTO_INCREMENT,
+  `f_time_axis_title` varchar(50) DEFAULT NULL COMMENT '标题',
+  `f_time_axis_type` int(2) DEFAULT NULL COMMENT '类型 1 开心 2 难过 3 ',
+  `f_time_axis_content` varchar(500) DEFAULT NULL COMMENT '具体内容',
+  `f_user` varchar(50) DEFAULT NULL COMMENT '所属人',
+  `f_ctime` datetime DEFAULT NULL COMMENT '创建时间',
+  `f_utime` datetime DEFAULT NULL COMMENT '修改时间',
+  `f_version` int(2) DEFAULT NULL COMMENT '版本',
+  PRIMARY KEY (`fid`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='时间轴';
+
+-- ----------------------------
+-- Records of f_time_axis
+-- ----------------------------
+INSERT INTO `f_time_axis` VALUES ('2', '惹我生气', '1', '哈哈哈哈哈', '杜敏', '2017-02-02 12:13:14', '2017-02-02 12:13:14', '1');
+
+-- ----------------------------
+-- Table structure for f_user
+-- ----------------------------
+DROP TABLE IF EXISTS `f_user`;
+CREATE TABLE `f_user` (
+  `fid` int(11) NOT NULL AUTO_INCREMENT,
+  `f_user_name` varchar(50) DEFAULT NULL COMMENT '登录名',
+  `f_user_password` varchar(255) DEFAULT NULL COMMENT '密码',
+  `f_user_realname` varchar(50) DEFAULT NULL COMMENT '真实姓名',
+  `f_user_login_time` datetime DEFAULT NULL COMMENT '最近登录时间',
+  `f_user_status` int(2) DEFAULT NULL COMMENT '状态 0:禁用 1:启用',
+  `f_user_create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `f_user_update_time` datetime DEFAULT NULL COMMENT '修改时间',
+  `f_user_version` int(1) DEFAULT NULL COMMENT '版本号',
+  PRIMARY KEY (`fid`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of f_user
+-- ----------------------------
+INSERT INTO `f_user` VALUES ('1', '123', '202CB962AC59075B964B07152D234B70', '恶趣味', '2017-12-28 01:28:23', '1', '2017-12-28 01:28:28', '2017-12-28 01:28:30', '1');
