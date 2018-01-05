@@ -10,6 +10,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -28,6 +29,10 @@ public class HttpAspect {
     public void doBefore(JoinPoint joinPoint){
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
+        HttpServletResponse response = attributes.getResponse();
+        response.addHeader("Access-Control-Allow-Origin","*");
+        response.addHeader("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
+        //response.addHeader("Access-Control-Allow-Headers:x-requested-with","content-type");
         log.info("===========开始请求"+joinPoint.getSignature().getDeclaringTypeName()+"."+joinPoint.getSignature().getName()+"============");
         log.info("===========请求时间:"+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())+"==========================");
         //获取url
@@ -44,6 +49,9 @@ public class HttpAspect {
 
         //获取类参数
         log.info("args={}",joinPoint.getArgs());
+
+        //保存请求相关的信息
+
     }
     @After("log()")
     public void doAfter(){
