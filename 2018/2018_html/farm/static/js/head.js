@@ -58,7 +58,7 @@ document.writeln("                    <dd><a href=''>超链接</a></dd>");
 document.writeln("                </dl>");
 document.writeln("            </li>");
 document.writeln("            <li class='layui-nav-item'><a href=''>云市场</a></li>");
-document.writeln("            <li class='layui-nav-item'><a href=''>发布商品</a></li>");
+document.writeln("            <li class='layui-nav-item'><a href='time_axis.html'>时间轴</a></li>");
 document.writeln("        </ul>");
 document.writeln("    </div>");
 document.writeln("</div>");
