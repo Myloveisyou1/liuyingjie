@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50717
 File Encoding         : 65001
 
-Date: 2018-01-05 15:21:45
+Date: 2018-01-06 14:23:26
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -21,12 +21,12 @@ SET FOREIGN_KEY_CHECKS=0;
 DROP TABLE IF EXISTS `f_consume`;
 CREATE TABLE `f_consume` (
   `fid` int(11) NOT NULL AUTO_INCREMENT,
-  `f_consume_type` int(2) DEFAULT NULL COMMENT '类型 1早餐 2午餐 3晚餐 4小吃 5生活 6通讯 7交通',
+  `f_consume_type` int(2) DEFAULT NULL COMMENT '类型 1早餐 2午餐 3晚餐 4小吃 5生活 6通讯 7交通 8娱乐',
   `f_consume_money` decimal(4,2) DEFAULT NULL COMMENT '金额',
   `f_consume_remark` varchar(255) DEFAULT NULL COMMENT '备注',
   `f_consume_time` datetime DEFAULT NULL COMMENT '消费时间',
   PRIMARY KEY (`fid`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COMMENT='消费信息表';
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8 COMMENT='消费信息表';
 
 -- ----------------------------
 -- Records of f_consume
@@ -41,6 +41,8 @@ INSERT INTO `f_consume` VALUES ('7', '2', '12.00', '午饭', '2018-01-04 12:05:3
 INSERT INTO `f_consume` VALUES ('8', '4', '1.00', '棒棒糖', '2018-01-04 10:08:15');
 INSERT INTO `f_consume` VALUES ('9', '4', '1.00', '哇哈哈', '2018-01-05 10:09:43');
 INSERT INTO `f_consume` VALUES ('10', '2', '12.00', '午饭', '2018-01-05 14:05:53');
+INSERT INTO `f_consume` VALUES ('11', '7', '25.10', '公交+轻轨+出租车', '2018-01-05 22:15:55');
+INSERT INTO `f_consume` VALUES ('12', '8', '88.00', '电影票+爆米花+可乐', '2018-01-05 22:18:59');
 
 -- ----------------------------
 -- Table structure for f_consume_detail
@@ -53,7 +55,7 @@ CREATE TABLE `f_consume_detail` (
   `f_price` decimal(10,2) DEFAULT NULL COMMENT '价格',
   `f_ctime` datetime DEFAULT NULL,
   PRIMARY KEY (`fid`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8 COMMENT='消费信息详情表';
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8 COMMENT='消费信息详情表';
 
 -- ----------------------------
 -- Records of f_consume_detail
@@ -71,6 +73,10 @@ INSERT INTO `f_consume_detail` VALUES ('10', '7', '午饭', '12.00', '2018-01-04
 INSERT INTO `f_consume_detail` VALUES ('11', '8', '棒棒糖', '1.00', '2018-01-04 10:10:58');
 INSERT INTO `f_consume_detail` VALUES ('12', '9', '哇哈哈', '1.00', '2018-01-05 10:11:14');
 INSERT INTO `f_consume_detail` VALUES ('13', '10', '午饭', '12.00', '2018-01-05 14:06:09');
+INSERT INTO `f_consume_detail` VALUES ('14', '11', '轻轨+公交', '11.10', '2018-01-05 20:17:20');
+INSERT INTO `f_consume_detail` VALUES ('15', '11', '出租车', '14.00', '2018-01-05 23:59:33');
+INSERT INTO `f_consume_detail` VALUES ('16', '12', '电影票', '60.00', '2018-01-05 22:20:27');
+INSERT INTO `f_consume_detail` VALUES ('17', '12', '爆米花+可乐', '28.00', '2018-01-05 22:20:27');
 
 -- ----------------------------
 -- Table structure for f_goods
