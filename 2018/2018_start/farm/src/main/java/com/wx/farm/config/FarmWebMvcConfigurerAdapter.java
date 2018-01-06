@@ -21,7 +21,7 @@ public class FarmWebMvcConfigurerAdapter extends WebMvcConfigurerAdapter{
 
     public void addInterceptors(InterceptorRegistry registry) {
 
-        registry.addInterceptor(loginInterceptor()).addPathPatterns("");
+        registry.addInterceptor(loginInterceptor()).addPathPatterns("/**");
     }
 
 }

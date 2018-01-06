@@ -7,8 +7,10 @@ package com.wx.farm.enums;
  */
 public enum ResultEnum {
     UNKNOW_ERROR(-1,"未知错误"),
-    ERROR_PASSWORD(401,"密码错误"),
-    UNKNOW_ACCOUNT(404,"账户不存在"),
+    ERROR_PASSWORD(100,"密码错误"),
+    UNKNOW_ACCOUNT(101,"账户不存在"),
+    NOT_LOGIN(102,"账户未登录或登陆已失效"),
+    EMPTY_SESSIONID(104,"sessionId不能为空"),
     EMPTY_ERROR(404,"参数不全"),
     SUCCESS(1,"成功"),
     ERROR(0,"失败");
