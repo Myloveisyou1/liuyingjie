@@ -41,8 +41,15 @@ public class LoginService {
         String sessionId = "";
         if(mapper.findUserByName(userName) != null){
             if(user != null){
+                //先判断原来登陆是否失效
+                if(stringRedisTemplate.hasKey("sessionId")){
+                    if(stringRedisTemplate.hasKey(stringRedisTemplate.opsForValue().get("sessionId"))){
+                        stringRedisTemplate.delete(stringRedisTemplate.opsForValue().get("sessionId"));
+                    }
+                }
                 //保存session到redis
                 sessionId = MD5Util.getMD5(new Date().toString());
+                stringRedisTemplate.opsForValue().set("sessionId",sessionId);
                 stringRedisTemplate.opsForValue().set(sessionId, JSONObject.toJSONString(user),1800, TimeUnit.SECONDS);
                 map.put("sessionId",sessionId);
                 map.put("user",user);
