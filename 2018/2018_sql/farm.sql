@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50717
 File Encoding         : 65001
 
-Date: 2018-01-06 14:23:26
+Date: 2018-01-08 17:11:42
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -26,7 +26,7 @@ CREATE TABLE `f_consume` (
   `f_consume_remark` varchar(255) DEFAULT NULL COMMENT '备注',
   `f_consume_time` datetime DEFAULT NULL COMMENT '消费时间',
   PRIMARY KEY (`fid`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8 COMMENT='消费信息表';
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8 COMMENT='消费信息表';
 
 -- ----------------------------
 -- Records of f_consume
@@ -43,6 +43,11 @@ INSERT INTO `f_consume` VALUES ('9', '4', '1.00', '哇哈哈', '2018-01-05 10:09
 INSERT INTO `f_consume` VALUES ('10', '2', '12.00', '午饭', '2018-01-05 14:05:53');
 INSERT INTO `f_consume` VALUES ('11', '7', '25.10', '公交+轻轨+出租车', '2018-01-05 22:15:55');
 INSERT INTO `f_consume` VALUES ('12', '8', '88.00', '电影票+爆米花+可乐', '2018-01-05 22:18:59');
+INSERT INTO `f_consume` VALUES ('13', '7', '3.60', '轻轨', '2018-01-06 08:33:46');
+INSERT INTO `f_consume` VALUES ('14', '2', '15.00', '午饭', '2018-01-06 12:34:12');
+INSERT INTO `f_consume` VALUES ('15', '4', '74.00', '超市', '2018-01-06 19:35:51');
+INSERT INTO `f_consume` VALUES ('16', '7', '31.60', '轻轨+滴滴打车', '2018-01-08 08:36:36');
+INSERT INTO `f_consume` VALUES ('17', '4', '6.10', '红牛+哇哈哈', '2018-01-08 08:37:30');
 
 -- ----------------------------
 -- Table structure for f_consume_detail
@@ -55,7 +60,7 @@ CREATE TABLE `f_consume_detail` (
   `f_price` decimal(10,2) DEFAULT NULL COMMENT '价格',
   `f_ctime` datetime DEFAULT NULL,
   PRIMARY KEY (`fid`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8 COMMENT='消费信息详情表';
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8 COMMENT='消费信息详情表';
 
 -- ----------------------------
 -- Records of f_consume_detail
@@ -77,6 +82,12 @@ INSERT INTO `f_consume_detail` VALUES ('14', '11', '轻轨+公交', '11.10', '20
 INSERT INTO `f_consume_detail` VALUES ('15', '11', '出租车', '14.00', '2018-01-05 23:59:33');
 INSERT INTO `f_consume_detail` VALUES ('16', '12', '电影票', '60.00', '2018-01-05 22:20:27');
 INSERT INTO `f_consume_detail` VALUES ('17', '12', '爆米花+可乐', '28.00', '2018-01-05 22:20:27');
+INSERT INTO `f_consume_detail` VALUES ('18', '13', '轻轨', '3.60', '2018-01-06 08:38:57');
+INSERT INTO `f_consume_detail` VALUES ('19', '14', '午饭', '15.00', '2018-01-06 12:39:02');
+INSERT INTO `f_consume_detail` VALUES ('20', '15', '超市', '74.00', '2018-01-06 19:39:06');
+INSERT INTO `f_consume_detail` VALUES ('21', '16', '轻轨', '3.60', '2018-01-08 08:40:32');
+INSERT INTO `f_consume_detail` VALUES ('22', '16', '滴滴打车', '28.00', '2018-01-08 08:40:30');
+INSERT INTO `f_consume_detail` VALUES ('23', '17', '红牛+哇哈哈', '6.10', '2018-01-08 08:40:06');
 
 -- ----------------------------
 -- Table structure for f_goods
@@ -179,6 +190,32 @@ CREATE TABLE `f_sys_log` (
 -- ----------------------------
 
 -- ----------------------------
+-- Table structure for f_sys_type
+-- ----------------------------
+DROP TABLE IF EXISTS `f_sys_type`;
+CREATE TABLE `f_sys_type` (
+  `fid` int(11) NOT NULL AUTO_INCREMENT,
+  `f_name` varchar(255) DEFAULT NULL COMMENT '英文名称',
+  `f_des` varchar(255) DEFAULT NULL COMMENT '中文名称',
+  `f_ctime` datetime DEFAULT NULL,
+  `f_utime` datetime DEFAULT NULL,
+  `f_version` int(2) DEFAULT NULL,
+  PRIMARY KEY (`fid`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COMMENT='消费类型配置';
+
+-- ----------------------------
+-- Records of f_sys_type
+-- ----------------------------
+INSERT INTO `f_sys_type` VALUES ('1', 'BREAKFIRST', '早餐', '2018-01-08 14:01:03', '2018-01-08 14:01:07', '1');
+INSERT INTO `f_sys_type` VALUES ('2', 'LUNCH', '午餐', '2018-01-08 14:01:07', '2018-01-08 14:01:07', '1');
+INSERT INTO `f_sys_type` VALUES ('3', 'DINNER', '晚餐', '2018-01-08 14:01:07', '2018-01-08 14:01:07', '1');
+INSERT INTO `f_sys_type` VALUES ('4', 'SNACK', '小吃', '2018-01-08 14:01:07', '2018-01-08 14:01:07', '1');
+INSERT INTO `f_sys_type` VALUES ('5', 'LIFE', '生活', '2018-01-08 14:01:07', '2018-01-08 14:01:07', '1');
+INSERT INTO `f_sys_type` VALUES ('6', 'COMMUNICATION', '通讯', '2018-01-08 14:01:07', '2018-01-08 14:01:07', '1');
+INSERT INTO `f_sys_type` VALUES ('7', 'TRAFFIC', '交通', '2018-01-08 14:01:07', '2018-01-08 14:01:07', '1');
+INSERT INTO `f_sys_type` VALUES ('8', 'ENTERTAINMENT', '娱乐', '2018-01-08 14:01:07', '2018-01-08 14:01:07', '1');
+
+-- ----------------------------
 -- Table structure for f_time_axis
 -- ----------------------------
 DROP TABLE IF EXISTS `f_time_axis`;
@@ -192,12 +229,19 @@ CREATE TABLE `f_time_axis` (
   `f_utime` datetime DEFAULT NULL COMMENT '修改时间',
   `f_version` int(2) DEFAULT NULL COMMENT '版本',
   PRIMARY KEY (`fid`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='时间轴';
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COMMENT='时间轴';
 
 -- ----------------------------
 -- Records of f_time_axis
 -- ----------------------------
 INSERT INTO `f_time_axis` VALUES ('2', '惹我生气', '1', '哈哈哈哈哈', '杜敏', '2017-02-02 12:13:14', '2017-02-02 12:13:14', '1');
+INSERT INTO `f_time_axis` VALUES ('3', '惹我生气', '1', '哈哈哈哈哈', '杜敏', '2017-02-02 12:13:14', '2017-02-02 12:13:14', '1');
+INSERT INTO `f_time_axis` VALUES ('4', '惹我生气', '1', '哈哈哈哈哈', '杜敏', '2017-02-02 12:13:14', '2017-02-02 12:13:14', '1');
+INSERT INTO `f_time_axis` VALUES ('5', '惹我生气', '1', '哈哈哈哈哈', '杜敏', '2017-02-02 12:13:14', '2017-02-02 12:13:14', '1');
+INSERT INTO `f_time_axis` VALUES ('6', '惹我生气', '1', '哈哈哈哈哈', '杜敏', '2017-02-02 12:13:14', '2017-02-02 12:13:14', '1');
+INSERT INTO `f_time_axis` VALUES ('7', '惹我生气', '1', '哈哈哈哈哈', '杜敏', '2017-02-02 12:13:14', '2017-02-02 12:13:14', '1');
+INSERT INTO `f_time_axis` VALUES ('8', '惹我生气', '1', '哈哈哈哈哈', '杜敏', '2017-02-02 12:13:14', '2017-02-02 12:13:14', '1');
+INSERT INTO `f_time_axis` VALUES ('9', '惹我生气', '1', '哈哈哈哈哈', '杜敏', '2017-02-02 12:13:14', '2017-02-02 12:13:14', '1');
 
 -- ----------------------------
 -- Table structure for f_user
