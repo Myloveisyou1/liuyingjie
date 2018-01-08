@@ -1,15 +1,23 @@
 package com.wx.farm.domain;
 
+import java.io.Serializable;
+
 /**
  * @Descript: 分页数据
  * @Author: liuyingjie
  * @Date: create in 2018/1/6 0006 14:31
  */
-public class Page {
+public class Page implements Serializable{
 
-    private Integer pageSize;
+    private Integer pageSize;//每页数据
 
-    private Integer pageNumber;
+    private Integer pageNumber;//页码
+
+    private Integer pageCount;//总数据
+
+    private Integer totalPage;//总页码
+
+    private Integer targetPage;//总查询使用的数据
 
     public Integer getPageSize() {
         return pageSize;
@@ -27,9 +35,28 @@ public class Page {
         this.pageNumber = pageNumber;
     }
 
-    public Page(Integer pageSize, Integer pageNumber) {
-        this.pageSize = pageSize;
-        this.pageNumber = pageNumber;
+    public Integer getPageCount() {
+        return pageCount;
+    }
+
+    public void setPageCount(Integer pageCount) {
+        this.pageCount = pageCount;
+    }
+
+    public Integer getTotalPage() {
+        return totalPage;
+    }
+
+    public void setTotalPage(Integer totalPage) {
+        this.totalPage = totalPage;
+    }
+
+    public Integer getTargetPage() {
+        return targetPage;
+    }
+
+    public void setTargetPage(Integer targetPage) {
+        this.targetPage = targetPage;
     }
 
     @Override
@@ -37,6 +64,9 @@ public class Page {
         return "Page{" +
                 "pageSize=" + pageSize +
                 ", pageNumber=" + pageNumber +
+                ", pageCount=" + pageCount +
+                ", totalPage=" + totalPage +
+                ", targetPage=" + targetPage +
                 '}';
     }
 }

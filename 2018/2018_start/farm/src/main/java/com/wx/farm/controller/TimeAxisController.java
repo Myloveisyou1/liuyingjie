@@ -38,4 +38,16 @@ public class TimeAxisController {
         }
     }
 
+    /**
+     * 查询时间轴
+     * @param
+     * @return
+     */
+    @GetMapping(value = "/findTimeAxisByPage")
+    public Result findTimeAxisByPage(Integer pageSize,Integer pageNumber,String f_user){
+
+        return ResultUtil.success(service.findTimeAxisByPage(pageSize,pageNumber,f_user));
+
+    }
+
 }

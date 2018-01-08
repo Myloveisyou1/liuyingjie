@@ -5,7 +5,7 @@ package com.wx.farm.domain;
  * @Author: liuyingjie
  * @Date: create in 2018/1/5 0005 14:21
  */
-public class TimeAxis {
+public class TimeAxis{
 
     private Integer fid;
 
