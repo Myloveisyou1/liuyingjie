@@ -1,0 +1,14 @@
+document.writeln("<!DOCTYPE html>");
+document.writeln("<html lang='en'>");
+document.writeln("<head>");
+document.writeln("    <meta charset='UTF-8'>");
+document.writeln("    <title>底部</title>");
+document.writeln("    <link rel='stylesheet' href='static/css/layui.css'>");
+document.writeln("</head>");
+document.writeln("<body>");
+document.writeln("<div class='layui-footer'>");
+document.writeln("    <!-- 底部固定区域 -->");
+document.writeln("    © layui.com - 底部固定区域");
+document.writeln("</div>");
+document.writeln("</body>");
+document.writeln("</html>");
